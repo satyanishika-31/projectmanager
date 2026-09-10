@@ -4,6 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "start": "npm --prefix Backend install --omit=dev && npm --prefix Backend start    git add package.json
+    git commit -m "Add root start script for Render"
+    git push origin main",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
