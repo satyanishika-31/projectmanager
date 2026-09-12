@@ -18,6 +18,7 @@ import {
   Check,
   Search,
   Filter,
+  Pencil,
 } from 'lucide-react';
 import api from '../services/api';
 import { useToast } from '../context/ToastContext';
@@ -27,6 +28,7 @@ import TaskModal from '../components/TaskModal';
 import IssueModal from '../components/IssueModal';
 import CreateTaskModal from '../components/CreateTaskModal';
 import CreateIssueModal from '../components/CreateIssueModal';
+import EditProjectModal from '../components/EditProjectModal';
 import { CreateSprintModal, CreateMilestoneModal } from '../components/PlanningModals';
 
 const TABS = [
@@ -73,6 +75,7 @@ const ProjectDetail = () => {
   const [showCreateSprint, setShowCreateSprint] = useState(false);
   const [showCreateMilestone, setShowCreateMilestone] = useState(false);
   const [showAddMember, setShowAddMember] = useState(false);
+  const [showEditProject, setShowEditProject] = useState(false);
 
   // Add member form state
   const [newMemberEmail, setNewMemberEmail] = useState('');
@@ -183,6 +186,14 @@ const ProjectDetail = () => {
     }
   };
 
+  const handleProjectUpdated = (updatedProject) => {
+    setProject((currentProject) => ({
+      ...currentProject,
+      ...updatedProject,
+      currentUserRole: currentProject.currentUserRole,
+    }));
+  };
+
   if (loading) {
     return (
       <div className="space-y-6 animate-pulse">
@@ -215,9 +226,9 @@ const ProjectDetail = () => {
   return (
     <div className="space-y-6 pb-12">
       {/* Project Header Banner */}
-      <div className="bg-white rounded-2xl p-6 border border-slate-200 shadow-xs flex flex-col md:flex-row md:items-center justify-between gap-4">
+        <div className="bg-white rounded-2xl p-6 border border-slate-200 shadow-xs flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
-          <div className="flex items-center gap-2 mb-1.5">
+            <div className="flex flex-wrap items-center gap-2 mb-1.5">
             <h1 className="text-2xl font-extrabold text-slate-900 tracking-tight">
               {project.name}
             </h1>
@@ -227,12 +238,27 @@ const ProjectDetail = () => {
             <span className="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-md bg-slate-100 text-slate-700">
               Role: {project.currentUserRole}
             </span>
+              {project.endDate && (
+                <span className="inline-flex items-center gap-1 text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-md bg-amber-50 text-amber-700 border border-amber-200">
+                  <Calendar className="w-3 h-3" />
+                  Due {new Date(project.endDate).toLocaleDateString()}
+                </span>
+              )}
           </div>
-          <p className="text-xs text-slate-500 max-w-2xl">{project.description}</p>
+            <p className="text-xs text-slate-500 max-w-2xl">{project.description || 'No description provided.'}</p>
         </div>
 
         {/* Global project actions */}
         <div className="flex items-center gap-2">
+            {isManagerOrLead && (
+              <button
+                onClick={() => setShowEditProject(true)}
+                className="px-4 py-2 bg-white text-slate-700 border border-slate-200 rounded-xl text-xs font-semibold hover:bg-slate-50 transition flex items-center gap-1.5"
+              >
+                <Pencil className="w-3.5 h-3.5" />
+                Edit Project
+              </button>
+            )}
           <button
             onClick={() => {
               setCreateTaskStatus('todo');
@@ -804,6 +830,14 @@ const ProjectDetail = () => {
           projectId={projectId}
           onClose={() => setShowCreateIssue(false)}
           onCreated={fetchProjectData}
+        />
+      )}
+
+      {showEditProject && (
+        <EditProjectModal
+          project={project}
+          onClose={() => setShowEditProject(false)}
+          onUpdated={handleProjectUpdated}
         />
       )}
 
