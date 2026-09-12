@@ -44,11 +44,6 @@ const Login = () => {
     }
   };
 
-  const fillDemoAccount = (demoEmail) => {
-    setEmail(demoEmail);
-    setPassword('Password123!');
-  };
-
   return (
     <main className="min-h-screen bg-[#fbfafb] font-sans">
       <div className="grid min-h-screen w-full overflow-hidden bg-[#fbfafb] lg:grid-cols-[1fr_1.02fr]">
@@ -176,37 +171,6 @@ const Login = () => {
                 Sign up
               </Link>
             </div>
-
-            {/* =================================================
-                DEMO ACCOUNTS
-            ================================================== */}
-            <details className="mt-7 border-t border-[#eee9ee] pt-4 text-xs text-[#716b73]">
-
-              <summary className="cursor-pointer text-center font-medium text-[#923b5b]">
-                Demo access
-              </summary>
-
-              <div className="mt-3 grid grid-cols-2 gap-2">
-
-                {[
-                  ['Admin', 'admin@projectpulse.com'],
-                  ['Team Lead', 'lead@projectpulse.com'],
-                  ['Developer', 'dev@projectpulse.com'],
-                  ['Stakeholder', 'stakeholder@projectpulse.com'],
-                ].map(([label, demoEmail]) => (
-                  <button
-                    key={demoEmail}
-                    type="button"
-                    onClick={() => fillDemoAccount(demoEmail)}
-                    className="border border-[#e2dce2] px-2 py-2 text-left font-medium transition hover:border-[#923b5b] hover:text-[#923b5b]"
-                  >
-                    {label}
-                  </button>
-                ))}
-
-              </div>
-
-            </details>
 
           </div>
         </section>

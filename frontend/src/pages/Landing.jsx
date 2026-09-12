@@ -1,8 +1,10 @@
+import React from 'react';
 import { Link } from 'react-router-dom';
 import {
   ArrowRight,
   BarChart3,
   Check,
+  ChevronDown,
   CircleCheck,
   Layers3,
   Menu,
@@ -12,7 +14,7 @@ import {
   X,
 } from 'lucide-react';
 import { useState } from 'react';
-import heroImage from '../assets/hero.png';
+import heroImage from '../assets/hero2.png';
 
 const features = [
   {
@@ -46,24 +48,24 @@ function Landing() {
 
   return (
     <main className="min-h-screen overflow-hidden bg-[#fbf9f7] font-sans text-[#211b25]">
-      <nav className="relative z-10 mx-auto flex h-[84px] max-w-[1240px] items-center justify-between px-5 sm:px-8" aria-label="Primary navigation">
+      <nav className="relative z-10 mx-auto mt-5   rounded-4xl flex h-[84px] max-w-[1240px] bg-[#4e2538] items-center justify-between px-5 sm:px-8" aria-label="Primary navigation">
         <Link className="inline-flex items-center gap-2.5 text-[17px] font-bold tracking-[-0.03em] text-[#211b25] no-underline" to="/" aria-label="ProjectPulse home">
           <span className="flex h-[34px] w-[34px] items-center justify-center rounded-[9px] bg-[#713450] font-serif text-[22px] text-white">P</span>
-          <span>ProjectPulse</span>
+          <span className='text-white'>ProjectPulse</span>
         </Link>
 
         <div className={`${menuOpen ? 'flex' : 'hidden'} absolute left-0 right-0 top-[72px] flex-col items-stretch gap-0 border-b border-[#e7dedf] bg-[#fbf9f7] px-5 pb-5 pt-3 sm:static sm:flex sm:flex-row sm:items-center sm:gap-[30px] sm:border-0 sm:bg-transparent sm:p-0`}>
-          <a className="py-3 text-[13px] font-semibold text-[#756b77] transition hover:text-[#713450] sm:p-0" href="#features" onClick={() => setMenuOpen(false)}>Features</a>
-          <a className="py-3 text-[13px] font-semibold text-[#756b77] transition hover:text-[#713450] sm:p-0" href="#workflow" onClick={() => setMenuOpen(false)}>How it works</a>
-          <a className="py-3 text-[13px] font-semibold text-[#756b77] transition hover:text-[#713450] sm:p-0" href="#teams" onClick={() => setMenuOpen(false)}>For teams</a>
+          <a className="py-3 text-[13px] font-semibold text-[#f6f6f6] transition hover:text-[#713450] sm:p-0" href="#features" onClick={() => setMenuOpen(false)}>Features</a>
+          <a className="py-3 text-[13px] font-semibold text-[#ece7ed] transition hover:text-[#713450] sm:p-0" href="#workflow" onClick={() => setMenuOpen(false)}>How it works</a>
+          <a className="py-3 text-[13px] font-semibold text-[#fbf7fc] transition hover:text-[#713450] sm:p-0" href="#teams" onClick={() => setMenuOpen(false)}>For teams</a>
           <div className="mt-2 flex items-center gap-5 border-t border-[#e7dedf] pt-4 sm:hidden">
-            <Link className="text-[13px] font-semibold text-[#756b77]" to="/login">Log in</Link>
+            <Link className="text-[13px] font-semibold text-[#f9f8f9]" to="/login">Log in</Link>
             <Link className="ml-auto inline-flex items-center justify-center gap-2.5 rounded-[5px] border border-[#713450] bg-[#713450] px-[15px] py-2.5 text-[13px] font-bold text-white shadow-[0_7px_18px_rgba(113,52,80,.14)]" to="/register">Get started <ArrowRight size={15} /></Link>
           </div>
         </div>
 
         <div className="hidden items-center gap-[30px] sm:flex">
-          <Link className="text-[13px] font-semibold text-[#756b77] transition hover:text-[#713450]" to="/login">Log in</Link>
+          <Link className="text-[13px] font-semibold text-[#faf8fa] transition hover:text-[#713450]" to="/login">Log in</Link>
           <Link className="inline-flex items-center justify-center gap-2.5 rounded-[5px] border border-[#713450] bg-[#713450] px-[15px] py-2.5 text-[13px] font-bold text-white shadow-[0_7px_18px_rgba(113,52,80,.14)] transition hover:-translate-y-0.5 hover:bg-[#5e2943]" to="/register">Get started <ArrowRight size={15} /></Link>
         </div>
         <button className="p-1.5 text-[#211b25] sm:hidden" type="button" aria-label="Toggle menu" onClick={() => setMenuOpen((open) => !open)}>
@@ -85,13 +87,7 @@ function Landing() {
 
         <div className="relative self-center px-0 pb-7 sm:px-5 lg:min-w-0" aria-label="ProjectPulse workspace preview">
           <div className="absolute right-[10%] top-[17%] h-[65%] w-[70%] bg-[#eecfd9] opacity-55 blur-[55px]" />
-          <div className="relative z-[1] rotate-[1.7deg] overflow-hidden rounded-[9px] border border-[#392634] bg-[#18131a] shadow-[20px_24px_50px_rgba(50,27,39,.2)]">
-            <div className="flex h-[29px] items-center gap-1.5 bg-[#251b25] px-[13px]"><span className="h-1.5 w-1.5 rounded-full bg-[#6d4860]" /><span className="h-1.5 w-1.5 rounded-full bg-[#a8768b]" /><span className="h-1.5 w-1.5 rounded-full bg-[#d29cae]" /><small className="ml-auto font-mono text-[7px] tracking-[.1em] text-[#a995a3]">PROJECTPULSE / OVERVIEW</small></div>
-            <img className="block h-auto w-full opacity-90 saturate-[.82]" src={heroImage} alt="A project management command center" />
-            <div className="absolute right-[22px] top-[51px] flex items-center gap-2 rounded-[5px] border border-[#ecbdcd]/35 bg-[#281825]/90 px-3 py-2 text-[10px] text-[#f7e8ed] backdrop-blur-[10px]"><span className="h-[7px] w-[7px] rounded-full bg-[#87d3a5]" /> On track <strong className="ml-1 text-white">84%</strong></div>
-            <div className="absolute bottom-5 left-5 flex items-center gap-2 rounded-[5px] border border-[#ecbdcd]/35 bg-[#281825]/90 px-3 py-2 text-[10px] text-[#f7e8ed] backdrop-blur-[10px]"><span className="flex"><i className="h-[18px] w-[18px] rounded-full border border-[#281a25] bg-[#dbb07e]" /><i className="-ml-1 h-[18px] w-[18px] rounded-full border border-[#281a25] bg-[#db9bae]" /><i className="-ml-1 h-[18px] w-[18px] rounded-full border border-[#281a25] bg-[#9d8fca]" /></span><strong className="text-white">12</strong> teammates aligned</div>
-          </div>
-          <div className="absolute -bottom-0.5 -right-1 flex rotate-[-4deg] flex-col items-start gap-0.5 font-mono text-[10px] uppercase tracking-[.12em] text-[#713450]"><span className="border-b border-[#b4627d] pb-1 text-base">01</span><span>Clarity</span><span>over chaos</span></div>
+            <img className="block h-auto w-full opacity-90 saturate-[.82] rounded-4xl border-b-8 border-b-mauve-600" src={heroImage} alt="A project management command center" />
         </div>
       </section>
 
@@ -117,7 +113,7 @@ function Landing() {
         <div className="self-center">{steps.map(([number, title, text]) => <div className="grid grid-cols-[45px_1fr] gap-[30px] border-t border-[#d5c3c8] py-6 first:pt-0 last:border-b last:pb-[27px]" key={number}><span className="pt-1 font-mono text-[11px] text-[#b4627d]">{number}</span><div><h3 className="m-0 mb-1.5 font-serif text-2xl font-semibold">{title}</h3><p className="m-0 max-w-[410px] text-[13px] leading-[1.6] text-[#756b77]">{text}</p></div></div>)}</div>
       </section>
 
-      <section className="flex flex-col items-start justify-between gap-9 bg-[#713450] px-5 py-[75px] text-white sm:px-8 lg:flex-row lg:items-center lg:px-[max(32px,calc((100%_-_1176px)_/_2))] lg:py-[105px]"><div><p className="font-mono text-[10px] uppercase tracking-[.14em] text-[#e5abb9]">Ready when you are</p><h2 className="mt-[17px] font-serif text-[clamp(43px,5vw,66px)] font-semibold leading-[.99] tracking-[-.05em]">Give your best work<br /><em className="text-[#e8aabd]">somewhere to go.</em></h2></div><Link className="inline-flex items-center justify-center gap-2.5 rounded-[5px] border border-[#f6e9eb] bg-[#f6e9eb] px-5 py-[15px] text-[13px] font-bold text-[#713450] transition hover:bg-white" to="/register">Get started for free <ArrowRight size={18} /></Link></section>
+      <section className="flex flex-col items-start justify-between gap-9 bg-[#4e2538] px-5 py-[75px] text-white sm:px-8 lg:flex-row lg:items-center lg:px-[max(32px,calc((100%_-_1176px)_/_2))] lg:py-[105px]"><div><p className="font-mono text-[10px] uppercase tracking-[.14em] text-[#e5abb9]">Ready when you are</p><h2 className="mt-[17px] font-serif text-[clamp(43px,5vw,66px)] font-semibold leading-[.99] tracking-[-.05em]">Give your best work<br /><em className="text-[#e8aabd]">somewhere to go.</em></h2></div><Link className="inline-flex items-center justify-center gap-2.5 rounded-[5px] border border-[#f6e9eb] bg-[#f6e9eb] px-5 py-[15px] text-[13px] font-bold text-[#713450] transition hover:bg-white" to="/register">Get started for free <ArrowRight size={18} /></Link></section>
       <footer className="flex flex-col items-start gap-5 bg-[#1e1720] px-5 py-[25px] text-[11px] text-[#a999a6] sm:flex-row sm:items-center sm:justify-between sm:gap-[30px] lg:px-[max(32px,calc((100%_-_1176px)_/_2))]"><Link className="inline-flex items-center gap-2.5 text-sm font-bold text-[#f7edf0]" to="/"><span className="flex h-[27px] w-[27px] items-center justify-center rounded-[9px] bg-[#713450] font-serif text-[17px] text-white">P</span><span>ProjectPulse</span></Link><span>© 2026 ProjectPulse. Made for teams in motion.</span><div className="flex gap-5"><Link className="text-[11px] text-[#c9b9c2]" to="/login">Log in</Link><Link className="text-[11px] text-[#c9b9c2]" to="/register">Sign up</Link></div></footer>
     </main>
   );
