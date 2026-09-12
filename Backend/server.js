@@ -1,33 +1,31 @@
 
-import exp from 'express';
-import { connect } from 'mongoose';
-import { config } from 'dotenv';
-import cors from 'cors';
-import cookieParser from 'cookie-parser';
+const express = require('express');
+const cors = require('cors');
+const cookieParser = require('cookie-parser');
+const dotenv = require('dotenv');
+const path = require('path');
+const fs = require('fs');
+const connectDB = require('./config/db');
+const { notFound, errorHandler } = require('./middleware/errorMiddleware');
 
-// Route imports
-import { authApp } from './routes/authRoutes.js';
-import { organizationApp } from './routes/organizationRoutes.js';
-import { teamApp } from './routes/teamRoutes.js';
-import { projectApp } from './routes/projectRoutes.js';
-import { milestoneApp } from './routes/milestoneRoutes.js';
-import { sprintApp } from './routes/sprintRoutes.js';
-import { taskApp } from './routes/taskRoutes.js';
-import { issueApp } from './routes/issueRoutes.js';
-import { commentApp } from './routes/commentRoutes.js';
-import { labelApp } from './routes/labelRoutes.js';
-import { attachmentApp } from './routes/attachmentRoutes.js';
-import { notificationApp } from './routes/notificationRoutes.js';
-import { activityApp } from './routes/activityRoutes.js';
+const authRoutes = require('./routes/authRoutes');
+const organizationRoutes = require('./routes/organizationRoutes');
+const teamRoutes = require('./routes/teamRoutes');
+const projectRoutes = require('./routes/projectRoutes');
+const milestoneRoutes = require('./routes/milestoneRoutes');
+const sprintRoutes = require('./routes/sprintRoutes');
+const taskRoutes = require('./routes/taskRoutes');
+const issueRoutes = require('./routes/issueRoutes');
+const commentRoutes = require('./routes/commentRoutes');
+const labelRoutes = require('./routes/labelRoutes');
+const attachmentRoutes = require('./routes/attachmentRoutes');
+const notificationRoutes = require('./routes/notificationRoutes');
+const activityRoutes = require('./routes/activityRoutes');
 
-config();
+dotenv.config({ path: path.join(__dirname, '.env') });
 
-// Express app
-const app = exp();
+const app = express();
 
-// --------------------------------------------------
-// Allowed frontend origins
-// --------------------------------------------------
 
 const configuredOrigins = (process.env.FRONTEND_URLS || '')
   .split(',')
@@ -36,14 +34,11 @@ const configuredOrigins = (process.env.FRONTEND_URLS || '')
 
 const allowedOrigins = [
   'http://localhost:5173',
-    'http://127.0.0.1:5173',
-  'https://projectmanager-sand.vercel.app/login',
+  'http://127.0.0.1:5173',
+  'https://projectmanager-sand.vercel.app',
   ...configuredOrigins
 ];
 
-// --------------------------------------------------
-// Middleware
-// --------------------------------------------------
 
 app.use(
   cors({
@@ -76,54 +71,33 @@ app.use(
 );
 
 app.use(cookieParser());
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
-app.use(exp.json());
+const uploadsPath = path.join(__dirname, 'uploads');
+if (!fs.existsSync(uploadsPath)) fs.mkdirSync(uploadsPath, { recursive: true });
+app.use('/uploads', express.static(uploadsPath));
 
-app.use(
-  exp.urlencoded({
-    extended: true
-  })
-);
+app.use('/api/auth', authRoutes);
+app.use('/api/organizations', organizationRoutes);
+app.use('/api/teams', teamRoutes);
+app.use('/api/projects', projectRoutes);
+app.use('/api/milestones', milestoneRoutes);
+app.use('/api/sprints', sprintRoutes);
+app.use('/api/tasks', taskRoutes);
+app.use('/api/issues', issueRoutes);
+app.use('/api/comments', commentRoutes);
+app.use('/api/labels', labelRoutes);
+app.use('/api/attachments', attachmentRoutes);
+app.use('/api/notifications', notificationRoutes);
+app.use('/api/activity', activityRoutes);
 
-// --------------------------------------------------
-// Routes
-// --------------------------------------------------
-
-app.use('/api/auth', authApp);
-
-app.use('/api/organizations', organizationApp);
-
-app.use('/api/teams', teamApp);
-
-app.use('/api/projects', projectApp);
-
-app.use('/api/milestones', milestoneApp);
-
-app.use('/api/sprints', sprintApp);
-
-app.use('/api/tasks', taskApp);
-
-app.use('/api/issues', issueApp);
-
-app.use('/api/comments', commentApp);
-
-app.use('/api/labels', labelApp);
-
-app.use('/api/attachments', attachmentApp);
-
-app.use('/api/notifications', notificationApp);
-
-app.use('/api/activity', activityApp);
-
-// --------------------------------------------------
-// Health check
-// --------------------------------------------------
 
 app.get('/', (req, res) => {
   res.status(200).json({
     success: true,
     message: 'Welcome to ProjectPulse API',
-    version: '1.0.0'
+    version: '1.0.0',
   });
 });
 
@@ -135,66 +109,20 @@ app.get('/api/health', (req, res) => {
   });
 });
 
-// --------------------------------------------------
-// Port
-// --------------------------------------------------
+
+app.use(notFound);
+app.use(errorHandler);
 
 const port = process.env.PORT || 5000;
 
-// --------------------------------------------------
-// Database connection
-// --------------------------------------------------
-
-let isConnected = false;
-
-const connectDB = async () => {
-  if (isConnected) return;
-
-  try {
-    await connect(process.env.DB_URL);
-
-    isConnected = true;
-
-    console.log('DB connected');
-  } catch (err) {
-    console.error('DB connection error:', err.message);
-
-    console.error(
-      'Continuing without DB connection (development mode). Some features will be unavailable.'
-    );
-  }
-};
-
-// --------------------------------------------------
-// Start server
-// --------------------------------------------------
-
 const startServer = async () => {
   await connectDB();
-
   app.listen(port, () => {
-    console.log('--------------------------------------------');
-    console.log('ProjectPulse Backend');
-    console.log(`Server running on port ${port}`);
-    console.log(`http://localhost:${port}`);
-    console.log(`Health: http://localhost:${port}/api/health`);
-    console.log('--------------------------------------------');
+    console.log(`ProjectPulse Backend running on port ${port}`);
   });
 };
 
-startServer();
-
-// --------------------------------------------------
-// Global error handler
-// --------------------------------------------------
-
-app.use((err, req, res, next) => {
-  console.error(err);
-
-  const status = err.status || err.statusCode || 500;
-
-  res.status(status).json({
-    success: false,
-    message: err.message || 'Internal server error'
-  });
+startServer().catch((error) => {
+  console.error('Server startup failed:', error.message);
+  process.exit(1);
 });
