@@ -28,7 +28,7 @@ const Register = () => {
     try {
       await register(name, email, password);
       toast.success('Registration successful! Welcome to ProjectPulse.');
-      navigate('/dashboard');
+      navigate('/dashboard', { replace: true });
     } catch (error) {
       console.error(error);
       toast.error(error.response?.data?.message || 'Registration failed');

@@ -1,5 +1,6 @@
 import React from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
 import ProtectedRoute from './ProtectedRoute';
 import MainLayout from '../layouts/MainLayout';
 
@@ -19,13 +20,21 @@ import Profile from '../pages/Profile';
 import Settings from '../pages/Settings';
 import Landing from '../pages/Landing';
 
+const PublicRoute = ({ children }) => {
+  const { isAuthenticated, loading } = useAuth();
+
+  if (loading) return null;
+
+  return isAuthenticated ? <Navigate to="/dashboard" replace /> : children;
+};
+
 const AppRoutes = () => {
   return (
     <Routes>
       {/* Public Authentication Routes */}
-      <Route path="/" element={<Landing />} />
-      <Route path="/login" element={<Login />} />
-      <Route path="/register" element={<Register />} />
+      <Route path="/" element={<PublicRoute><Landing /></PublicRoute>} />
+      <Route path="/login" element={<PublicRoute><Login /></PublicRoute>} />
+      <Route path="/register" element={<PublicRoute><Register /></PublicRoute>} />
 
       {/* Protected Application Routes */}
       <Route element={<ProtectedRoute />}>

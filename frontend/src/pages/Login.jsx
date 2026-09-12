@@ -31,7 +31,7 @@ const Login = () => {
       await login(email, password);
 
       toast.success('Welcome back!');
-      navigate('/dashboard');
+      navigate('/dashboard', { replace: true });
     } catch (error) {
       console.error(error);
 
